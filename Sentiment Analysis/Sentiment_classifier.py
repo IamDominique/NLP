@@ -149,20 +149,13 @@ class Sentiment_Analysis:
         Builds a network sequentially
         """
         #model stucture
-        embedding_size = 64
+        embedding_size = 32
         self.model = Sequential()
-        #Embedding layer
         self.model.add(Embedding(input_dim=len(self.word2id),
                                  output_dim = embedding_size,
                                  input_length=self.max_words))
-        #Mapping with a Bidirectional wrapper and a LSTM layer
-        self.model.add(LSTM(100, return_sequences=True))
-        self.model.add(Dropout(0.5))
-        self.model.add(LSTM(100, return_sequences=True))
-        self.model.add(Dropout(0.5))
-        self.model.add(LSTM(100))
-        self.model.add(Dropout(0.5))
-        #Dense layer with a sigmoid activation to
+        self.model.add(Bidirectional(LSTM(50, dropout=0.4, return_sequences=False),
+                       merge_mode='concat'))
         self.model.add(Dense(len(self.label2id), activation='sigmoid'))
 
 
@@ -175,7 +168,7 @@ class Sentiment_Analysis:
                       metrics=['accuracy'])
 
 
-    def train(self, batch_size = 32, epochs = 0):
+    def train(self, batch_size = 256, epochs = 0):
         """
         Trains the network on the training dataset
         input:
