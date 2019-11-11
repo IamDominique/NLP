@@ -168,7 +168,7 @@ class Sentiment_Analysis:
                       metrics=['accuracy'])
 
 
-    def train(self, batch_size = 256, epochs = 0):
+    def train(self, batch_size = 256, epochs = 5):
         """
         Trains the network on the training dataset
         input:
