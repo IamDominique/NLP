@@ -36,10 +36,10 @@ class Network:
         print("10 Most common words in the source dataset:")
         print('"' + '" "'.join(list(zip(*source.most_common(10)))[0]) + '"')
         print()
-        print(f"{len([word for sentence in french_sentences for word in sentence.split()])} target words.")
-        print(f"{len(french_words_counter)} unique target words.")
+        print(f"{len([word for sentence in target_sentences for word in sentence.split()])} target words.")
+        print(f"{len(target_words_counter)} unique target words.")
         print('10 Most common words in the target dataset:')
-        print('"' + '" "'.join(list(zip(*french_words_counter.most_common(10)))[0]) + '"')
+        print('"' + '" "'.join(list(zip(*target_words_counter.most_common(10)))[0]) + '"')
 
 
 
