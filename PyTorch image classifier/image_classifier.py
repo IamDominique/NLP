@@ -18,15 +18,12 @@ class Classifier():
 
     def model_setup(self, arch = "resnet50", hidden_units = 1024,learning_rate = 0.001,
                     dropout=0.2, gpu = False):
-        '''Methods that builds a model
-           Args
-           architecture
-           number of units of the first hidden layer
-           learning rate
-           dropout rate
-           gpu or cpu
-           Returns
-           Nothing
+        '''Builds a model
+           :param arch: chosen architecture
+           :param hidden_units: number of units of the first hidden layer
+           :param learning_rate: chosen learning rate
+           :param dropout: chosen dropout
+           :param gpu (boolean): chosen processing (gpu or cpu)
         '''
         #initializing
         self.arch = arch
@@ -90,13 +87,9 @@ class Classifier():
 
     def load_data(self, data_path = "./flowers" ):
         '''
-        Loads 3 datasets from the choosen directories and generates 3 dataloader the neural network can use
+        Loads 3 datasets from the choosen directories and generates 3 dataloader
         Subdirectories for the datasets should be test, train and valid.
-        Args
-        data path containing the 3 subdirectories
-        Returns
-        nothing
-
+        :param data_path: data path containing the 3 subdirectories
         '''
 
         data_dir = data_path
@@ -145,13 +138,8 @@ class Classifier():
     def train(self, epochs = 1):
 
         """
-        Train the model. Prints metric during training
-        Args
-        training _set : as a torch.utils.data.DataLoader
-        validation_set : as a torch.utils.data.DataLoader
-        epoch (int) : number of training cycle
-        Returns
-        Nothing
+        Train the model
+        :param epochs: number of training epoch / cycle
         """
 
 
@@ -171,7 +159,7 @@ class Classifier():
                 self.optimizer.zero_grad()
                 #forward pass through the model
                 output = self.model(data)
-                #delta between labels(real ouput) and output(model output)
+                #delta between labels(real results) and output(model results)
                 loss = self.criterion(output, labels)
                 #backward propagation - how much each layer contributed to the error
                 loss.backward()
@@ -192,13 +180,13 @@ class Classifier():
                     self.model.eval()
                     #getting data and labels from the dataset
                     for data, labels in self.validloader:
-                    #loading model,data and labels to device
+                        #loading model,data and labels to device
                         self.model = model.to(self.device)
                         data = data.to(self.device)
                         labels = labels.to(self.device)
                         #forward pass through the model
                         output = self.model(data)
-                        #delta between labels(real ouput) and output(model output)
+                        #delta between labels(real results) and output(model results)
                         delta = self.criterion(output, labels)
                         validation_loss += delta.item()
                         #converting result from the output layer to percentage
@@ -211,7 +199,7 @@ class Classifier():
                         accuracy += torch.mean(match.type(torch.FloatTensor)).item()
 
 
-             #printing metrics
+            #printing metrics
             print("Epoch {}".format(val +1))
             print("Running Loss {}".format(training_loss / len(validloader)))
             print("validation Loss {}".format(validation_loss / len(validloader)))
@@ -233,11 +221,7 @@ class Classifier():
     def test_model(self):
 
         """
-        Test the trained model and displaying the accuracy on test batch
-        Args
-        test_set : as a torch.utils.data.DataLoader
-        Returns
-        Nothing
+        Test the trained model
         """
         print("---------------Testing in Progress----------------")
         #initalizing data
@@ -254,7 +238,7 @@ class Classifier():
                 labels = labels.to(self.device)
                 #forward pass through the model
                 output = self.model(data)
-                #delta between labels(real ouput) and output(model output)
+                #delta between labels(real results) and output(model results)
                 delta = self.criterion(output, labels)
                 #converting result from the output layer to percentage
                 percentage = torch.exp(output)
@@ -276,12 +260,9 @@ class Classifier():
     def save_checkpoint(self,file_name = "checkpoint", save_dir = os.path.abspath("./")):
         """
         Saves the model and the class to index mapping into a checkpoint
-        arg :
-        checkpoint file name (without extension)
-        saving directory
-
-        returns :
-        saved checkpoint as a pth file
+        :param file_name: name of the file the model will be saved to (without extention)
+        :param save_dir: name of the directory the checkpoint file will be saved to
+        :returns:saved checkpoint as a pth file
         """
 
         #mapping classes to indices using one of the datasets
@@ -309,11 +290,7 @@ class Classifier():
         Rebuilds the model from a checkpoint
         also reload the matching model.class_to_idx and the
         number of training epochs
-
-        arg :
-        path to the checkpoint file
-
-
+        :param filepath: path to the checkpoint file
         """
         #initializing classifier
         init = Classifier()
@@ -336,12 +313,9 @@ class Classifier():
         '''
         Scales, crops, and normalizes an image (using the PIL package)
         The image is turned to a tensor ready to be used by the neural network
-        Args :
-        image file
-        Returns :
-        processed image as a tensor
-
-       '''
+        :param image: path to the image
+        :return: processed image as a tensor
+        '''
         buffer = Image.open(image)
 
         processing = transforms.Compose([transforms.Resize(224), #resizing
@@ -355,13 +329,10 @@ class Classifier():
 
     def predict(self,image_path, topk=5, category_names = False, gpu = False):
         ''' Predict the class or classes of an image using a trained deep learning model
-            args :
-            image path
-            number of top predicted classes
-            category_names for mapping
-            gpu to compute on the gpu if available
-            returns:
-            nothing, but prints the class or classes predicted together with the probabilities
+            :param image_path: path to the image tested
+            :param topk: number of top predicted classes
+            :param category_name (boolean): category_name for mapping
+            :param gpu (boolean): chosen processing (gpu or cpu)
         '''
 
         #scale, crops and normalize the image with the process_image function
